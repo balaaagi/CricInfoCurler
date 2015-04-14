@@ -15,6 +15,7 @@ String match_URL=null;
 HashMap<String,String> overallScoreList=new HashMap<String,String>();
 HashMap<String,String> currentlyBatting=new HashMap<String,String>();
 
+String match_status=null;
 String match_title=null;
 String matchCurrentScore=null;
 String matchCurrentOvers=null;
@@ -88,26 +89,29 @@ public void getScoreCardFromCricInfo() throws Exception{
 	BufferedReader in = new BufferedReader(new InputStreamReader(
 	                                    this.http_conn.getInputStream()));
 	        String inputLine;
+	        String titleLine,descriptionLine;
 	        while ((inputLine = in.readLine()) != null) {
 
 	            if(inputLine.indexOf("<title>")>-1)
 	                break;
+	            
 	        }
 	            
 	        in.close();
-	        // System.out.println("Current Score....");
-	        // System.out.println("Length:"+inputLine.length());
+	        //this.match_title=inputLine.substring(inputLine.indexOf("match-information-strip")+3,inputLine.indexOf("</div>", inputLine.indexOf("match-information-strip")+3));
 	        inputLine=inputLine.substring(8,inputLine.indexOf("</title>"));
-	        //System.out.println("Live Score");
+	        this.match_status=inputLine.substring(inputLine.lastIndexOf(")")+3,inputLine.indexOf("|", inputLine.lastIndexOf(")")+2));
 	        this.matchCurrentScore=inputLine.substring(0,inputLine.indexOf("("));
 	       
 	        String mainscore=inputLine.substring(inputLine.indexOf("(")+1,inputLine.indexOf(")"));
 	        String[] scoresplit=mainscore.split(",");
 	        
-	                //System.out.println("Overs: "+scoresplit[0]);
+
 	                this.matchCurrentOvers=scoresplit[0].split(" ")[0];
 	                this.currentlyBatting.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" ")), scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
 	                this.overallScoreList.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" ")), scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
+	                this.currentlyBatting.put(scoresplit[2].substring(0, scoresplit[2].lastIndexOf(" ")), scoresplit[2].substring(scoresplit[2].lastIndexOf(" "),scoresplit[2].lastIndexOf("*")));
+	                this.overallScoreList.put(scoresplit[2].substring(0, scoresplit[2].lastIndexOf(" ")), scoresplit[2].substring(scoresplit[2].lastIndexOf(" "),scoresplit[2].lastIndexOf("*")));
 
 	                if(scoresplit.length>2)
 	                    this.currentBowler=scoresplit[3];
@@ -117,13 +121,27 @@ public void getScoreCardFromCricInfo() throws Exception{
 }
 
 public void printCurrentScore(){
+	System.out.println(this.match_title);
+	System.out.println("****"+this.match_status+"****");
+	
 	System.out.println(this.matchCurrentScore);
-	System.out.println("Overs"+this.matchCurrentOvers);
+	System.out.println("Overs "+this.matchCurrentOvers);
 	System.out.println("______________________________");
-	String[] batsmans=(String[]) this.currentlyBatting.keySet().toArray();
-	System.out.println(batsmans[0]+"*\t"+this.currentlyBatting.get(batsmans[0]));
-	System.out.println(batsmans[1]+" \t"+this.currentlyBatting.get(batsmans[1]));
-	System.out.println(this.currentBowler);
+	Set<String> batsmans=this.currentlyBatting.keySet();
+	boolean striker=true;
+	for(String batsman: batsmans){
+		if(striker){
+			System.out.println(batsman.toString()+"*\t"+this.currentlyBatting.get(batsman).replaceAll("\\t",""));
+			striker=false;
+		}else{
+			System.out.println(batsman.toString()+" \t"+this.currentlyBatting.get(batsman).replaceAll("\\t",""));
+		}
+	}
+	
+	System.out.println();
+	
+	System.out.println("Current Bowler "+this.currentBowler);
+	
 	
 	
 }
@@ -144,25 +162,18 @@ public void setMatchCurrentScore(String matchCurrentScore) {
 	this.matchCurrentScore = matchCurrentScore;
 }
 
-public String getMatch_title() {
-	return match_title;
+public String getMatch_status() {
+	return match_status;
 }
 
-public void setMatch_title(String match_title) {
-	this.match_title = match_title;
+public void setMatch_status(String match_status) {
+	this.match_status = match_status;
 }
 
-public HashMap<String, String> getOverallScoreList() {
-	return overallScoreList;
-}
 
-public void setOverallScoreList(HashMap<String, String> overallScoreList) {
-	this.overallScoreList = overallScoreList;
-}
 
-public void updateScoreList(String playerName,String playerScore){
-	this.overallScoreList.put(playerName, playerScore);
-}
+
+
 public String getMatch_URL() {
 	return match_URL;
 }
@@ -172,7 +183,7 @@ public void setMatch_URL(String match_URL) {
 }
 
 public void batsmanOut(String playerName,String playerScore){
-	this.updateScoreList(playerName, playerScore);
+	//this.updateScoreList(playerName, playerScore);
 	this.currentlyBatting.remove(playerName);
 }
 
