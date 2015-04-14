@@ -58,16 +58,7 @@ public HashMap<String, String> getCurrentlyBatting() {
 	return currentlyBatting;
 }
 
-public void printScoreList(){
-	
-	Set<String> keys=this.overallScoreList.keySet();
-	for(String key : keys){
-		if(this.currentlyBatting.containsKey(key))
-			System.out.println(key+"*"+"\t\t"+this.overallScoreList.get(key));
-		else
-			System.out.println(key+" "+"\t\t"+this.overallScoreList.get(key));
-	}
-}
+
 
 public void connectESPNCricInfo() throws Exception{
 	 this.request_url= new URL(this.match_URL);
