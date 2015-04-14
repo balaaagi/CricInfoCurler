@@ -18,8 +18,11 @@ HashMap<String,String> currentlyBatting=new HashMap<String,String>();
 String match_title=null;
 String matchCurrentScore=null;
 String matchCurrentOvers=null;
+String currentBowler=null;
 boolean behindProxy=false;
 String proxyIPAdrress=null;
+
+
 String proxyPort=null;
 URL request_url=null;
 Proxy proxy=null;
@@ -95,23 +98,34 @@ public void getScoreCardFromCricInfo() throws Exception{
 	        // System.out.println("Current Score....");
 	        // System.out.println("Length:"+inputLine.length());
 	        inputLine=inputLine.substring(8,inputLine.indexOf("</title>"));
-	        System.out.println("Live Score");
-	        System.out.println(inputLine.substring(0,inputLine.indexOf("(")));
+	        //System.out.println("Live Score");
+	        this.matchCurrentScore=inputLine.substring(0,inputLine.indexOf("("));
+	       
 	        String mainscore=inputLine.substring(inputLine.indexOf("(")+1,inputLine.indexOf(")"));
 	        String[] scoresplit=mainscore.split(",");
 	        
-	                System.out.println("Overs: "+scoresplit[0]);
-	                System.out.println("Batsmen in Strike:"+scoresplit[1]);
+	                //System.out.println("Overs: "+scoresplit[0]);
+	                this.matchCurrentOvers=scoresplit[0].split(" ")[0];
+	                this.currentlyBatting.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" ")), scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
+	                this.overallScoreList.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" ")), scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
+
 	                if(scoresplit.length>2)
-	                    System.out.println("Batsmen in Non Strike:"+scoresplit[2]);
+	                    this.currentBowler=scoresplit[3];
 	                else
-	                    System.out.println("Batsmen OUT!!!!");
-	                System.out.println("------------");
-	                if(scoresplit.length>2)
-	                    System.out.println("Bowler: "+scoresplit[3]);
-	                else
-	                    System.out.println("Bowler: "+scoresplit[2]);
+	                    this.currentBowler=scoresplit[2];
 	    
+}
+
+public void printCurrentScore(){
+	System.out.println(this.matchCurrentScore);
+	System.out.println("Overs"+this.matchCurrentOvers);
+	System.out.println("______________________________");
+	String[] batsmans=(String[]) this.currentlyBatting.keySet().toArray();
+	System.out.println(batsmans[0]+"*\t"+this.currentlyBatting.get(batsmans[0]));
+	System.out.println(batsmans[1]+" \t"+this.currentlyBatting.get(batsmans[1]));
+	System.out.println(this.currentBowler);
+	
+	
 }
 
 public String getMatchCurrentOvers() {
