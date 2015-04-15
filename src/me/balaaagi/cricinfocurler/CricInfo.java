@@ -1,16 +1,22 @@
 package me.balaaagi.cricinfocurler;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 public class CricInfo {
+final String FILE_NAME="match_config.txt";
 String match_URL=null;
 HashMap<String,String> overallScoreList=new HashMap<String,String>();
 HashMap<String,String> currentlyBatting=new HashMap<String,String>();
@@ -196,6 +202,63 @@ public void setMatch_URL(String match_URL) {
 public void batsmanOut(String playerName,String playerScore){
 	//this.updateScoreList(playerName, playerScore);
 	this.currentlyBatting.remove(playerName);
+}
+
+public void initialize() throws Exception {
+	// TODO Auto-generated method stub
+	File file = new File(FILE_NAME);
+	String lineContent = null;
+    try{
+    	
+    
+        final FileReader fileReader = new FileReader(file);
+        final BufferedReader br = new BufferedReader(fileReader);
+        int lineCount=0;
+        ArrayList<String> match_configs=new ArrayList<String>();
+        while ((lineContent = br.readLine()) != null) {
+        	
+        	match_configs.add(lineContent);
+        	
+            lineCount++;
+
+        }
+        
+        br.close();
+         
+        
+        if(match_configs.size()>1){
+        	
+        	this.setMatch_URL(match_configs.get(0));
+        	this.setBehindProxy(true);
+        	this.setProxyIPAdrress(match_configs.get(1));
+        	this.setProxyIPAdrress(match_configs.get(2));
+        }else{
+        	this.setMatch_URL(match_configs.get(0));
+        	this.setBehindProxy(false);
+        }
+    }catch(Exception e){
+    	throw e;
+    }
+
+    
+	
+}
+
+public void configDetails(String match_url2, String behindproxy2,
+		String proxyIP, String proxyPort2) throws Exception {
+	// TODO Auto-generated method stub
+	FileWriter fw = new FileWriter(FILE_NAME);
+	fw.write(match_url2+"\n");
+	if(Boolean.parseBoolean(behindproxy2))
+	{
+		fw.write(proxyIP+"\n");
+		fw.write(proxyPort2+"\n");
+	}
+	fw.write("");
+	fw.close();
+		
+	
+	
 }
 
  
