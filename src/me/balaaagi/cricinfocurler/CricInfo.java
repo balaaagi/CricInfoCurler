@@ -102,7 +102,9 @@ public void getScoreCardFromCricInfo() throws Exception{
 	       this.match_title=descriptionLine;
 	        //this.match_title=descriptionLine.substring(descriptionLine.indexOf("match-information-strip")+3,descriptionLine.indexOf("</div>", descriptionLine.indexOf("match-information-strip")+3));
 	        titleLine=titleLine.substring(8,titleLine.indexOf("</title>"));
-	        this.match_status=titleLine.substring(titleLine.lastIndexOf(")")+3,titleLine.indexOf("|", titleLine.lastIndexOf(")")+2));
+	        //System.out.println(titleLine.lastIndexOf(")"));
+	        //System.out.println(titleLine.indexOf("|",titleLine.lastIndexOf(")")));
+	        this.match_status=titleLine.substring(titleLine.lastIndexOf(")")+2,titleLine.indexOf("|", titleLine.lastIndexOf(")")+2));
 	        this.matchCurrentScore=titleLine.substring(0,titleLine.indexOf("("));
 	       
 	        String mainscore=titleLine.substring(titleLine.indexOf("(")+1,titleLine.indexOf(")"));
@@ -130,7 +132,7 @@ public void getScoreCardFromCricInfo() throws Exception{
 
 public void printCurrentScore(){
 	
-	System.out.println("****"+this.match_status+"****");
+	System.out.println("****"+this.match_status.replaceAll("-", " ")+"****");
 	System.out.println(this.match_title.trim());
 	System.out.println("______________________________");
 	System.out.println(this.matchCurrentScore);
