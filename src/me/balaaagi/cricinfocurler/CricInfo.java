@@ -80,41 +80,59 @@ public void getScoreCardFromCricInfo() throws Exception{
 	BufferedReader in = new BufferedReader(new InputStreamReader(
 	                                    this.http_conn.getInputStream()));
 	        String inputLine;
-	        String titleLine,descriptionLine;
+	        String titleLine = "",descriptionLine = null;
 	        while ((inputLine = in.readLine()) != null) {
 
-	            if(inputLine.indexOf("<title>")>-1)
-	                break;
-	            
+	            if(inputLine.indexOf("<title>")>-1){
+	            	if(titleLine.length()<1)
+	            		titleLine=inputLine;
+	            }
+	            	
+	                
+	            if(inputLine.indexOf("innings-requirement")>-1)
+	            {
+	            	descriptionLine=in.readLine();
+	            	break;
+	            }
+	                
 	        }
 	            
 	        in.close();
-	        //this.match_title=inputLine.substring(inputLine.indexOf("match-information-strip")+3,inputLine.indexOf("</div>", inputLine.indexOf("match-information-strip")+3));
-	        inputLine=inputLine.substring(8,inputLine.indexOf("</title>"));
-	        this.match_status=inputLine.substring(inputLine.lastIndexOf(")")+3,inputLine.indexOf("|", inputLine.lastIndexOf(")")+2));
-	        this.matchCurrentScore=inputLine.substring(0,inputLine.indexOf("("));
+	        
+	       this.match_title=descriptionLine;
+	        //this.match_title=descriptionLine.substring(descriptionLine.indexOf("match-information-strip")+3,descriptionLine.indexOf("</div>", descriptionLine.indexOf("match-information-strip")+3));
+	        titleLine=titleLine.substring(8,titleLine.indexOf("</title>"));
+	        this.match_status=titleLine.substring(titleLine.lastIndexOf(")")+3,titleLine.indexOf("|", titleLine.lastIndexOf(")")+2));
+	        this.matchCurrentScore=titleLine.substring(0,titleLine.indexOf("("));
 	       
-	        String mainscore=inputLine.substring(inputLine.indexOf("(")+1,inputLine.indexOf(")"));
+	        String mainscore=titleLine.substring(titleLine.indexOf("(")+1,titleLine.indexOf(")"));
 	        String[] scoresplit=mainscore.split(",");
 	        
 
 	                this.matchCurrentOvers=scoresplit[0].split(" ")[0];
-	                this.currentlyBatting.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" ")), scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
-	                this.overallScoreList.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" ")), scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
-	                this.currentlyBatting.put(scoresplit[2].substring(0, scoresplit[2].lastIndexOf(" ")), scoresplit[2].substring(scoresplit[2].lastIndexOf(" "),scoresplit[2].lastIndexOf("*")));
-	                this.overallScoreList.put(scoresplit[2].substring(0, scoresplit[2].lastIndexOf(" ")), scoresplit[2].substring(scoresplit[2].lastIndexOf(" "),scoresplit[2].lastIndexOf("*")));
-
-	                if(scoresplit.length>2)
+	                
+	                
+	                if(scoresplit.length>3){
+	                	this.currentlyBatting.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" ")), scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
+		                
+		                this.currentlyBatting.put(scoresplit[2].substring(0, scoresplit[2].lastIndexOf(" ")), scoresplit[2].substring(scoresplit[2].lastIndexOf(" "),scoresplit[2].lastIndexOf("*")));
+		                
 	                    this.currentBowler=scoresplit[3];
-	                else
-	                    this.currentBowler=scoresplit[2];
+	                }
+
+	                else{
+	                	this.currentlyBatting.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" ")), scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
+	                	this.currentBowler=scoresplit[2];
+	                }
+	                    
 	    
 }
 
 public void printCurrentScore(){
-	System.out.println(this.match_title);
-	System.out.println("****"+this.match_status+"****");
 	
+	System.out.println("****"+this.match_status+"****");
+	System.out.println(this.match_title.trim());
+	System.out.println("______________________________");
 	System.out.println(this.matchCurrentScore);
 	System.out.println("Overs "+this.matchCurrentOvers);
 	System.out.println("______________________________");
