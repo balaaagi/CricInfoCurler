@@ -244,18 +244,23 @@ public void initialize() throws Exception {
 	
 }
 
-public void configDetails(String match_url2, String behindproxy2,
+public boolean configDetails(String match_url2, String behindproxy2,
 		String proxyIP, String proxyPort2) throws Exception {
 	// TODO Auto-generated method stub
-	FileWriter fw = new FileWriter(FILE_NAME);
-	fw.write(match_url2+"\n");
-	if(Boolean.parseBoolean(behindproxy2))
-	{
-		fw.write(proxyIP+"\n");
-		fw.write(proxyPort2+"\n");
+	try{
+		FileWriter fw = new FileWriter(FILE_NAME);
+		fw.write(match_url2+"\n");
+		if(Boolean.parseBoolean(behindproxy2))
+		{
+			fw.write(proxyIP+"\n");
+			fw.write(proxyPort2+"\n");
+		}
+		fw.write("");
+		fw.close();
+			return true;
+	}catch(Exception e){
+		return false;
 	}
-	fw.write("");
-	fw.close();
 		
 	
 	

@@ -46,7 +46,10 @@ public class Main {
 					break;
 					
 				case "-a":
-					cricinfo.configDetails(match_url,behindproxy,proxyIP,proxyPort);
+					if(cricinfo.configDetails(match_url,behindproxy,proxyIP,proxyPort))
+						System.out.println("Match Configurations Successfully Added...");
+					else
+						System.out.println("Match Configurations Failed!!!...");
 					break;
 				default:
 					break;
@@ -54,18 +57,13 @@ public class Main {
 		}
 			
 		
-		//cricinfo.setBehindProxy(false);
-		//cricinfo.setMatch_URL("http://www.espncricinfo.com/west-indies-v-england-2015/engine/match/766929.html");
-//		cricinfo.connectESPNCricInfo();
-//		cricinfo.getScoreCardFromCricInfo();
-//		cricinfo.printCurrentScore();
-//		
+	
 		
 			}
 			catch(FileNotFoundException e){
 				System.out.println("Config File not Found!! ");
 			}catch(Exception e){
-				System.out.println("Something Went Wrong!!");
+				System.out.println("Something Went Wrong with Configurations!!");
 			}
 	}
 
