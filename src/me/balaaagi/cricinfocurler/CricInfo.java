@@ -121,7 +121,7 @@ public void getScoreCardFromCricInfo() throws Exception{
 	                
 	                
 	                if(scoresplit.length>3){
-	                	this.currentlyBatting.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" ")), scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
+	                	this.currentlyBatting.put(scoresplit[1].substring(0, scoresplit[1].lastIndexOf(" "))+"*", scoresplit[1].substring(scoresplit[1].lastIndexOf(" "),scoresplit[1].lastIndexOf("*")));
 		                
 		                this.currentlyBatting.put(scoresplit[2].substring(0, scoresplit[2].lastIndexOf(" ")), scoresplit[2].substring(scoresplit[2].lastIndexOf(" "),scoresplit[2].lastIndexOf("*")));
 		                
@@ -148,7 +148,7 @@ public void printCurrentScore(){
 	boolean striker=true;
 	for(String batsman: batsmans){
 		if(striker){
-			System.out.println(batsman.toString()+"*\t"+this.currentlyBatting.get(batsman).replaceAll("\\t",""));
+			System.out.println(batsman.toString()+" \t"+this.currentlyBatting.get(batsman).replaceAll("\\t",""));
 			striker=false;
 		}else{
 			System.out.println(batsman.toString()+" \t"+this.currentlyBatting.get(batsman).replaceAll("\\t",""));
