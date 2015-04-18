@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -138,7 +139,7 @@ public void getScoreCardFromCricInfo() throws Exception{
 
 public void printCurrentScore(){
 	
-	System.out.println("****"+this.match_status.replaceAll("-", " ")+"****");
+	System.out.println("****"+(this.match_status.replaceAll("-", " ").length()>0?this.match_status.replaceAll("-", " "):"Live Score")+"****");
 	System.out.println(this.match_title.trim());
 	System.out.println("______________________________");
 	System.out.println(this.matchCurrentScore);
@@ -231,7 +232,7 @@ public void initialize() throws Exception {
         	this.setMatch_URL(match_configs.get(0));
         	this.setBehindProxy(true);
         	this.setProxyIPAdrress(match_configs.get(1));
-        	this.setProxyIPAdrress(match_configs.get(2));
+        	this.setProxyPort(match_configs.get(2));
         }else{
         	this.setMatch_URL(match_configs.get(0));
         	this.setBehindProxy(false);
@@ -248,15 +249,16 @@ public boolean configDetails(String match_url2, String behindproxy2,
 		String proxyIP, String proxyPort2) throws Exception {
 	// TODO Auto-generated method stub
 	try{
-		FileWriter fw = new FileWriter(FILE_NAME);
-		fw.write(match_url2+"\n");
+		File fw = new File(FILE_NAME);
+		PrintWriter writer = new PrintWriter(fw);
+		writer.println(match_url2);
 		if(Boolean.parseBoolean(behindproxy2))
 		{
-			fw.write(proxyIP+"\n");
-			fw.write(proxyPort2+"\n");
+			writer.println(proxyIP);
+			writer.println(proxyPort2);
 		}
-		fw.write("");
-		fw.close();
+		writer.flush();
+		writer.close();
 			return true;
 	}catch(Exception e){
 		return false;
