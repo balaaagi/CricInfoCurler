@@ -21,3 +21,4 @@ A simple command line tool for getting the cricket scores in easy way for system
 ####View Scores
 * Execute the below command each time <br>
 `java -jar CricInfoCurler.jar-s`
+Updated
